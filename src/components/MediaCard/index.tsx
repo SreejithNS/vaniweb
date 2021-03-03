@@ -1,24 +1,14 @@
 
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
+import ResponsiveCardContainer from '../ResponsiveCardContainer';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { useMediaQuery, useTheme, Theme, Grid } from '@material-ui/core';
+import { Theme, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        width:400,
-        height:"100%",
-        [theme.breakpoints.down('xs')]: {
-            width: "100%",
-            height: "100%",
-            maxWidth: "none"
-        }
-    },
     cardContent: {
         height: `calc(100% - ${250}px)`,
         [theme.breakpoints.down('xs')]: {
@@ -47,11 +37,9 @@ interface PropTypes {
 
 export default function MediaCard({ imgSrc, cardTitle, cardContext, buttonText, onNext, formInput }: PropTypes) {
     const classes = useStyles();
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
     return (
-        <Card square={isMobile} className={classes.root}>
+        <ResponsiveCardContainer>
             <CardMedia
                 className={classes.media}
                 image={imgSrc}
@@ -75,14 +63,13 @@ export default function MediaCard({ imgSrc, cardTitle, cardContext, buttonText, 
                             {formInput}
                         </form>
                     </Grid>
-                    <Grid item style={{textAlign:"right"}}>
+                    <Grid item style={{ textAlign: "right" }}>
                         <Button variant="contained" size="small" color="primary" onClick={onNext}>
                             {buttonText}
                         </Button>
                     </Grid>
                 </Grid>
             </CardContent>
-
-        </Card>
+        </ResponsiveCardContainer>
     );
 }

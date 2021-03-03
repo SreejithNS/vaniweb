@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, Theme, Container } from "@material-ui/core";
 import coverImage from "../../assets/welcome-card-cover.jpg";
 import MediaCard from "../../components/MediaCard";
@@ -9,6 +9,7 @@ import {
     CSSTransition
 } from "react-transition-group";
 import routes from "../routes.enum";
+import ReadingCard from "../../components/ReadingCard";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -42,7 +43,7 @@ export default function Welcome() {
     const classes = useStyles();
     const location = useLocation();
     const history = useHistory();
-    const dummyFunction = () => history.push(location.pathname + "/2");
+    const dummyFunction = (point:string) => () => history.push(routes.WELCOME + point);
     return (
         <Container fixed disableGutters className={classes.root}>
             <TransitionGroup>
@@ -60,7 +61,7 @@ export default function Welcome() {
                                     cardContext="Some text within paragraph"
                                     buttonText="Next"
                                     formInput={<TextField label="Age" type="number" required />}
-                                    onNext={dummyFunction}
+                                    onNext={dummyFunction("/2")}
                                 />
                             </WelcomeCards>
                         </Route>
@@ -72,8 +73,13 @@ export default function Welcome() {
                                     cardContext="Only if you provide us you region, we can make sure you get the apt sentence to read."
                                     buttonText="Start"
                                     formInput={<TextField label="Pincode" type="number" required />}
-                                    onNext={dummyFunction}
+                                    onNext={dummyFunction("/3")}
                                 />
+                            </WelcomeCards>
+                        </Route>
+                        <Route path={routes.WELCOME + "/3"}>
+                            <WelcomeCards>
+                                <ReadingCard/>
                             </WelcomeCards>
                         </Route>
                     </Switch>
