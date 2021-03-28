@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import RecordRTCPromisesHandler, { invokeSaveAsDialog } from "recordrtc";
+import RecordRTCPromisesHandler, { invokeSaveAsDialog, StereoAudioRecorder } from "recordrtc";
 
 interface ErrorState {
     status: boolean;
@@ -8,7 +8,7 @@ interface ErrorState {
 
 let recorder: RecordRTCPromisesHandler;
 
-export default function useAudio(onSave?:(blob:Blob)=>void) {
+export default function useAudio(onSave?: (blob: Blob) => void) {
     const [recordingState, setRecordingState] = useState<RecordRTCPromisesHandler.State | void>(recorder?.getState());
     const [error, setError] = useState<ErrorState>({ status: false, message: "" });
 
@@ -18,7 +18,9 @@ export default function useAudio(onSave?:(blob:Blob)=>void) {
 
     function createRecorder(stream: any) {
         recorder = new RecordRTCPromisesHandler(stream, {
-            type: 'audio'
+            type: 'audio',
+            mimeType: "audio/ogg",
+            recorderType: StereoAudioRecorder
         });
         setRecordingState(recorder.getState())
     }
@@ -51,8 +53,12 @@ export default function useAudio(onSave?:(blob:Blob)=>void) {
     }
 
     function catchError(error: Error) {
-        setRecordingState(recorder.getState())
-        setError({ status: true, message: error.message });
+        try {
+            setRecordingState(recorder.getState())
+            setError({ status: true, message: error.message });
+        } catch (e) {
+            setError({ status: true, message: e.message });
+        }
     }
 
     return { recordingState, error, stopRecorder, pauseRecorder, resetRecorder, startRecorder };

@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { initAxios } from './components/Axios';
+
+//Configure and initialise Axios Instance
+initAxios();
 
 ReactDOM.render(
   <React.StrictMode>
