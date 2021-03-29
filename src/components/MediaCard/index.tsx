@@ -1,30 +1,48 @@
 
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useRef, DetailedHTMLProps, FormHTMLAttributes } from 'react';
+import { makeStyles, withStyles, createStyles } from '@material-ui/core/styles';
 import ResponsiveCardContainer from '../ResponsiveCardContainer';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+import CardContentBase from '@material-ui/core/CardContent';
+import CardMediaBase from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Theme, Grid } from '@material-ui/core';
 
-const useStyles = makeStyles((theme: Theme) => ({
-    cardContent: {
-        height: `calc(100% - ${250}px)`,
-        [theme.breakpoints.down('xs')]: {
-            height: `calc(100% - ${60}vh)`
+const useStyles = makeStyles((theme: Theme) => createStyles({
+    form: {
+        display: "flex",
+        flexFlow: "column wrap",
+        alignItems: "stretch",
+        justifyContent: "space-between",
+        height: "100%",
+        "&>*": {
+            flexGrow: 1,
+        },
+        "&>*:last-child": {
+            flexGrow: 0,
+            alignSelf:"flex-end"
         }
-    },
-    media: {
-        height: 250,
-        [theme.breakpoints.down('xs')]: {
-            height: "60vh"
-        }
-    },
-    gridHeight: {
-        height: "100%"
     }
 }));
+
+const CardMedia = withStyles((theme: Theme) => ({
+    root: {
+        flexGrow: 3,
+        minHeight:300
+    },
+}))(CardMediaBase);
+
+const CardContent = withStyles((theme: Theme) => ({
+    root: {
+        flexGrow: 1,
+        "&>form>div>*":{
+            margin: {
+                top:theme.spacing(1),
+                bottom:theme.spacing(2)
+            }
+        }
+    },
+}))(CardContentBase);
 
 interface PropTypes {
     imgSrc: any;
@@ -37,39 +55,41 @@ interface PropTypes {
 
 export default function MediaCard({ imgSrc, cardTitle, cardContext, buttonText, onNext, formInput }: PropTypes) {
     const classes = useStyles();
-
+    const formRef = useRef<HTMLFormElement>(null);
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (formRef?.current) {
+            const form = formRef.current;
+            if (form.reportValidity()) {
+                onNext();
+            }
+        }
+        return false;
+    }
     return (
         <ResponsiveCardContainer>
             <CardMedia
-                className={classes.media}
                 image={imgSrc}
+                title="Children"
             />
-            <CardContent className={classes.cardContent}>
-                <Grid
-                    container
-                    direction="column"
-                    justify="space-between"
-                    alignItems="stretch"
-                    className={classes.gridHeight}
-                >
-                    <Grid item>
+            <CardContent>
+                <form onSubmit={handleSubmit} ref={formRef} autoComplete="off" className={classes.form}>
+                    <div>
                         <Typography gutterBottom variant="h5" component="h2">
                             {cardTitle}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
                             {cardContext}
                         </Typography>
-                        <form noValidate autoComplete="off" onSubmit={onNext}>
-                            {formInput}
-                        </form>
-                    </Grid>
-                    <Grid item style={{ textAlign: "right" }}>
-                        <Button variant="contained" size="small" color="primary" onClick={onNext}>
+                        {formInput}
+                    </div>
+                    <div>
+                        <Button variant="contained" size="small" color="primary" type="submit">
                             {buttonText}
                         </Button>
-                    </Grid>
-                </Grid>
+                    </div>
+                </form>
             </CardContent>
-        </ResponsiveCardContainer>
+        </ResponsiveCardContainer >
     );
 }

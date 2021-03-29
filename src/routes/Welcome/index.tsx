@@ -14,12 +14,12 @@ import ReadingCard from "../../components/ReadingCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        height: "100vh",
+        flexGrow: 1,
     },
     centered: {
         [theme.breakpoints.down('xs')]: {
             height: "100%",
-            width: "100%"
+            width: "100%",
         },
         [theme.breakpoints.up('xs')]: {
             position: "fixed",
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }))
 
-const WelcomeCards: React.FunctionComponent = props => {
+export const WelcomeCards: React.FunctionComponent = props => {
     const classes = useStyles();
     return (
         <div className={classes.centered}>
@@ -43,7 +43,10 @@ export default function Welcome() {
     const classes = useStyles();
     const location = useLocation();
     const history = useHistory();
-    const dummyFunction = (point:string) => () => history.push(routes.WELCOME + point);
+    const [age, setAge] = React.useState<string | undefined>();
+    const [pincode, setPincode] = React.useState<string | undefined>();
+
+    const dummyFunction = (point: string) => () => history.push(routes.WELCOME + point);
     return (
         <Container fixed disableGutters className={classes.root}>
             <TransitionGroup>
@@ -58,9 +61,25 @@ export default function Welcome() {
                                 <MediaCard
                                     imgSrc={coverImage}
                                     cardTitle="Welcome to Vani"
-                                    cardContext="Some text within paragraph"
+                                    cardContext="Hey there, lets find out you reading age. First enter your Biological Age"
                                     buttonText="Next"
-                                    formInput={<TextField label="Age" type="number" required />}
+                                    formInput={
+                                        <TextField
+                                            label="Biological Age"
+                                            type="text"
+                                            value={age ?? ""}
+                                            autoFocus
+                                            inputProps={
+                                                {
+                                                    pattern: "^(0?[1-9]|[1-9][0-9]|[1][1-9][1-9]|200)$",
+                                                    title: "Enter a valid Age"
+                                                }
+                                            }
+                                            required onChange={(e) => {
+                                                setAge(e.target.value);
+                                            }}
+                                        />
+                                    }
                                     onNext={dummyFunction("/2")}
                                 />
                             </WelcomeCards>
@@ -70,16 +89,31 @@ export default function Welcome() {
                                 <MediaCard
                                     imgSrc={coverImage}
                                     cardTitle="Let us know where you are from"
-                                    cardContext="Only if you provide us you region, we can make sure you get the apt sentence to read."
+                                    cardContext="Only if you provide us your region, we can make sure you get the apt sentence to read."
                                     buttonText="Start"
-                                    formInput={<TextField label="Pincode" type="number" required />}
-                                    onNext={dummyFunction("/3")}
+                                    formInput={
+                                        <TextField
+                                            label="Pincode"
+                                            type="text"
+                                            autoFocus
+                                            inputProps={
+                                                {
+                                                    pattern: "^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$",
+                                                    title: "Enter a valid Indian Pincode"
+                                                }
+                                            }
+                                            value={pincode ?? ""}
+                                            required
+                                            onChange={(e) => {
+                                                setPincode(e.target.value.replace(" ", ""));
+                                            }}
+                                        />
+                                    }
+                                    onNext={() => {
+                                        const path = routes.SUBMISSION.replace(":age", age?.toString() ?? "");
+                                        history.push(path.replace(":pincode", pincode?.toString() ?? ""));
+                                    }}
                                 />
-                            </WelcomeCards>
-                        </Route>
-                        <Route path={routes.WELCOME + "/3"}>
-                            <WelcomeCards>
-                                <ReadingCard/>
                             </WelcomeCards>
                         </Route>
                     </Switch>
