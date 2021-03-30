@@ -1,15 +1,26 @@
 import { useState, useEffect } from "react";
-import RecordRTCPromisesHandler, { invokeSaveAsDialog, StereoAudioRecorder } from "recordrtc";
+import MediaRecorder from 'opus-media-recorder';
+
+type RecorderStates = 'inactive' | 'recording' | 'paused' | 'stopped';
 
 interface ErrorState {
     status: boolean;
     message: string;
 }
 
-let recorder: RecordRTCPromisesHandler;
+// opus-media-recorder options
+const workerOptions = {
+    encoderWorkerFactory: function () {
+        return new Worker(process.env.PUBLIC_URL + '/opus-media-recorder/encoderWorker.umd.js')
+    },
+    OggOpusEncoderWasmPath: process.env.PUBLIC_URL + '/opus-media-recorder/OggOpusEncoder.wasm',
+    WebMOpusEncoderWasmPath: process.env.PUBLIC_URL + '/opus-media-recorder/WebMOpusEncoder.wasm',
+};
+
+let recorder: MediaRecorder;
 
 export default function useAudio(onSave?: (blob: Blob) => void) {
-    const [recordingState, setRecordingState] = useState<RecordRTCPromisesHandler.State | void>(recorder?.getState());
+    const [recordingState, setRecordingState] = useState<RecorderStates | void>(recorder && recorder.state || void 0);
     const [error, setError] = useState<ErrorState>({ status: false, message: "" });
 
     useEffect(() => {
@@ -17,44 +28,60 @@ export default function useAudio(onSave?: (blob: Blob) => void) {
     });
 
     function createRecorder(stream: any) {
-        recorder = new RecordRTCPromisesHandler(stream, {
+        recorder = new MediaRecorder(stream, {
             type: 'audio',
-            mimeType: "audio/ogg",
-            recorderType: StereoAudioRecorder
-        });
-        setRecordingState(recorder.getState())
+            mimeType: "audio/ogg"
+        }, workerOptions);
+
+        setRecordingState(recorder.state);
+
+        recorder.addEventListener('dataavailable', (result) => onSave ? onSave(result.data) : console.log(result.data, "output.wav"));
+        recorder.addEventListener('start', (e) => {
+            console.log('Audio Recorder:start');
+            setRecordingState('recording');
+        })
+        recorder.addEventListener('stop', (e) => {
+            console.log('Audio Recorder:stop');
+            setRecordingState('inactive');
+        })
+        recorder.addEventListener('pause', (e) => {
+            console.log('Audio Recorder:pause');
+            setRecordingState('paused');
+        })
+        recorder.addEventListener('resume', (e) => {
+            console.log('Audio Recorder:resume');
+            setRecordingState('recording');
+        })
+        recorder.addEventListener('error', (e) => {
+            console.log('Audio Recorder:error');
+            catchError(e.error);
+        })
     }
 
     function startRecorder() {
-        if (recorder.getState() as unknown === "paused") recorder.resumeRecording();
-        else recorder.startRecording();
-        setRecordingState(recorder.getState())
+        if (recorder.state as unknown === "paused") recorder.resume();
+        else recorder.start();
+        setRecordingState(recorder.state)
     }
 
     function stopRecorder() {
-
-        recorder.stopRecording(function () {
-            setRecordingState(recorder.getState())
-            try {
-                let blob = recorder.getBlob();
-                onSave ? onSave(blob) : invokeSaveAsDialog(blob, "output.wav");
-            } catch (e) { catchError(e) }
-        });
+        recorder.stop();
     }
 
     function pauseRecorder() {
-        recorder.pauseRecording();
-        setRecordingState(recorder.getState())
+        recorder.pause();
+        setRecordingState(recorder.state)
     }
 
     function resetRecorder() {
-        recorder.reset();
-        setRecordingState(recorder.getState());
+        recorder.addEventListener('dataavailable', () => void 0);
+        recorder.stop();
+        setRecordingState();
     }
 
     function catchError(error: Error) {
         try {
-            setRecordingState(recorder.getState())
+            setRecordingState(recorder.state)
             setError({ status: true, message: error.message });
         } catch (e) {
             setError({ status: true, message: e.message });

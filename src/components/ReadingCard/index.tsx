@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -16,11 +16,16 @@ import { IconButton } from '@material-ui/core';
 import red from '@material-ui/core/colors/red';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import { useHistory, useParams } from 'react-router-dom';
+import routes from '../../routes/routes.enum';
+import AlertError from '@material-ui/icons/Error';
 const Zoom = require('react-reveal/Zoom');
 
 interface ResponseData {
     status: string;
-    doc: string;
+    doc: {
+        data: string[];
+    };
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -73,12 +78,14 @@ const TextCard = ({ text }: { text: string }) => {
 }
 
 export default function ReadingCard() {
+    const history = useHistory();
+    const params = useParams<{ age: string, pincode: string }>()
     const [index, setIndex] = React.useState(0);
     const [{ loading, error, data }] = useAxios<ResponseData>('/default/test-func/testapi/sentences');
     const [{ loading: submissionLoading, error: submissionError, data: submissionData }, postData] = useAxios<ResponseData>(
         {
             url: "/default/test-func/testapi/upload",
-            method: "POST"
+            method: "POST",
         }, { manual: true }
     );
     const recordingData = (blob: any) => {
@@ -91,17 +98,23 @@ export default function ReadingCard() {
                 data: {
                     audio: base64data,
                     ext: "ogg",
-                    pincode: "226018",
-                    age_b: "12"
+                    pincode: params.pincode,
+                    age_b: params.age
                 }
             })
             return;
         }
     };
-    const { startRecorder, stopRecorder, recordingState } = useAudio(recordingData);
+    const { startRecorder, stopRecorder, recordingState } = useAudio((data: Blob) => { console.log(data); recordingData(data) });
     const classes = useStyles();
 
-    const texts = (!loading && !submissionLoading && data) ? JSON.parse(data.doc).data as string[] : [];
+    useEffect(() => {
+        if (!loading && !submissionLoading && submissionData) {
+            history.push(routes.POSTSUBMIT);
+        }
+    })
+
+    const texts = (!loading && !submissionLoading && data) ? data.doc.data as string[] : [];
 
     const handleNext = (_: any) => {
         if (texts.length - 1 >= index + 1)
@@ -137,11 +150,28 @@ export default function ReadingCard() {
         }
     }
 
+    if (error) return (
+        <div style={{ textAlign: "center" }}>
+            <AlertError /> <br />
+            {"Oops! something went wrong while getting the sentences"}
+        </div>
+    )
+
+    if (submissionError) return (
+        <div style={{ textAlign: "center" }}>
+            <AlertError /> <br />
+            {"Oops! something went wrong while submitting you recording"}
+        </div>
+    )
+
     return (
         <ResponsiveCardContainer>
             <CardContent>
-                {loading
-                    ? <div style={{ textAlign: "center" }}><CircularProgress /></div>
+                {loading || submissionLoading
+                    ? <div style={{ textAlign: "center" }}>
+                        <CircularProgress /><br />
+                        {submissionLoading && "You did it! Now give us a moment to measure your reading-age!"}
+                    </div>
                     : data &&
                         recordingState === "inactive"
                         ? <Typography gutterBottom color="textSecondary" style={{ textAlign: "center" }} component="div">
