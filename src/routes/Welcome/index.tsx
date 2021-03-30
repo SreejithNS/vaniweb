@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, Theme, Container } from "@material-ui/core";
-import coverImage from "../../assets/welcome-card-cover.jpg";
+import coverImage from "../../assets/welcome-card-cover.webp";
 import MediaCard from "../../components/MediaCard";
 import { TextField } from "@material-ui/core";
 import { useLocation, Route, Switch, useHistory } from "react-router-dom";
