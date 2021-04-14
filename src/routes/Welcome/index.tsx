@@ -9,7 +9,6 @@ import {
     CSSTransition
 } from "react-transition-group";
 import routes from "../routes.enum";
-import ReadingCard from "../../components/ReadingCard";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -98,7 +97,7 @@ export default function Welcome() {
                                             autoFocus
                                             inputProps={
                                                 {
-                                                    pattern: "^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$",
+                                                    pattern: "^[1-9]{1}[0-9]{2}[0-9]{3}$",
                                                     title: "Enter a valid Indian Pincode"
                                                 }
                                             }
