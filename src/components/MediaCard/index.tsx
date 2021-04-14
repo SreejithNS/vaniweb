@@ -1,12 +1,11 @@
-
-import React, { useRef, DetailedHTMLProps, FormHTMLAttributes } from 'react';
+import React, { useRef } from 'react';
 import { makeStyles, withStyles, createStyles } from '@material-ui/core/styles';
 import ResponsiveCardContainer from '../ResponsiveCardContainer';
 import CardContentBase from '@material-ui/core/CardContent';
 import CardMediaBase from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { Theme, Grid } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     form: {

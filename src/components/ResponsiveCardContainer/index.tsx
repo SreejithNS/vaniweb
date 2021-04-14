@@ -4,7 +4,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CardBase from '@material-ui/core/Card';
 import { useMediaQuery, useTheme, Theme } from '@material-ui/core';
 
-const Card = withStyles((theme: Theme) => ({
+const Card = withStyles((theme: Theme) => makeStyles({
     root: {
         width:400,
         height:"100%",
