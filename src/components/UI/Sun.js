@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
-const imag='./sun.svg'
+
 const Sun = styled.div`
-background-image:'url(${imag})';
 border-radius: 50%;
   position: fixed;
   top: 3%;
@@ -31,10 +30,7 @@ export default ({img}) => {
 
   return (
     <Sun>
-       
-      {/* <animated.img src={img} alt="sun" style={propsSun} /> */}
-      {/* <animated.img src={img} alt="sunz" style={propsSun} /> */}
-      <animated.img src={"sun.svg"} alt="sunz" style={propsSun} />
+      <animated.img src={img} alt="sunz" style={propsSun} />
     </Sun>
   );
 };
