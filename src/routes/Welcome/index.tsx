@@ -2,6 +2,8 @@ import React from "react";
 import { makeStyles, Theme, Container } from "@material-ui/core";
 import Image1 from "../../assets/image1.jpg";
 import Image2 from "../../assets/image2.jpg";
+import Sun from "../../components/UI/Sun";
+
 import MediaCard from "../../components/MediaCard";
 import { TextField } from "@material-ui/core";
 import { useLocation, Route, Switch, useHistory } from "react-router-dom";
@@ -55,8 +57,11 @@ export default function Welcome() {
                     classNames="fade"
                     timeout={300}
                 >
+
                     <Switch location={location}>
                         <Route exact path={routes.WELCOME + "/"}>
+                        <Sun img={"sun.svg"} />
+                        {/* <Sun img={images["sun.svg"]} /> */}
                             <WelcomeCards>
                                 <MediaCard
                                     imgSrc={Image1}
