@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles, Theme, Container } from "@material-ui/core";
-import coverImage from "../../assets/welcome-card-cover.webp";
+import Image1 from "../../assets/image1.jpg";
+import Image2 from "../../assets/image2.jpg";
 import MediaCard from "../../components/MediaCard";
 import { TextField } from "@material-ui/core";
 import { useLocation, Route, Switch, useHistory } from "react-router-dom";
@@ -58,7 +59,7 @@ export default function Welcome() {
                         <Route exact path={routes.WELCOME + "/"}>
                             <WelcomeCards>
                                 <MediaCard
-                                    imgSrc={coverImage}
+                                    imgSrc={Image1}
                                     cardTitle="Welcome to Vani"
                                     cardContext="Hey there, lets find out you reading age. First enter your Biological Age"
                                     buttonText="Next"
@@ -86,7 +87,7 @@ export default function Welcome() {
                         <Route path={routes.WELCOME + "/2"}>
                             <WelcomeCards>
                                 <MediaCard
-                                    imgSrc={coverImage}
+                                    imgSrc={Image2}
                                     cardTitle="Let us know where you are from"
                                     cardContext="Only if you provide us your region, we can make sure you get the apt sentence to read."
                                     buttonText="Start"
