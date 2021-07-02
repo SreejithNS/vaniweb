@@ -9,6 +9,8 @@ import {
   Theme,
   WithStyles,
   withStyles,
+  WithWidth,
+  withWidth,
 } from "@material-ui/core";
 import { IconButton } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
@@ -48,6 +50,7 @@ const styles = (theme: Theme) =>
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
+      flexGrow:1,
       margin: theme.spacing(2),
     },
     recordButton: {
@@ -97,7 +100,7 @@ interface State {
   readingAge: null | number[];
 }
 
-type PropType = WithStyles<typeof styles> & ReactTimeoutProps;
+type PropType = WithStyles<typeof styles> & ReactTimeoutProps & WithWidth;
 
 class ReadingCard extends Component<PropType, State> {
   state: State = {
@@ -406,4 +409,4 @@ class ReadingCard extends Component<PropType, State> {
   }
 }
 
-export default withStyles(styles)(ReactTimeout(ReadingCard));
+export default withWidth()(withStyles(styles)(ReactTimeout(ReadingCard)));
