@@ -9,6 +9,8 @@ import {
   Theme,
   WithStyles,
   withStyles,
+  WithWidth,
+  withWidth,
 } from "@material-ui/core";
 import { IconButton } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
@@ -16,6 +18,7 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { Component } from "react";
 import { words, ages } from "../../assets/schonell_sentences.json";
 import axios from "../Axios";
+import confetti from "canvas-confetti";
 
 const MicRecorder = require("mic-recorder-to-mp3");
 
@@ -47,6 +50,7 @@ const styles = (theme: Theme) =>
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
+      flexGrow:1,
       margin: theme.spacing(2),
     },
     recordButton: {
@@ -96,7 +100,7 @@ interface State {
   readingAge: null | number[];
 }
 
-type PropType = WithStyles<typeof styles> & ReactTimeoutProps;
+type PropType = WithStyles<typeof styles> & ReactTimeoutProps & WithWidth;
 
 class ReadingCard extends Component<PropType, State> {
   state: State = {
@@ -122,7 +126,7 @@ class ReadingCard extends Component<PropType, State> {
 
   startTimeout = () => {
     if (!this.timeout) {
-      this.timeout = setTimeout(() => this.handleNext(true), 4000);
+      this.timeout = setTimeout(() => this.handleNext(true), 4 * 1000);
     }
   };
 
@@ -251,6 +255,53 @@ class ReadingCard extends Component<PropType, State> {
       });
   };
 
+  fireConfetti = () => {
+    var count = 200;
+    var defaults = {
+      origin: { y: 0.7 },
+    };
+
+    function fire(
+      particleRatio: number,
+      opts: {
+        spread: number;
+        startVelocity?: number;
+        decay?: number;
+        scalar?: number;
+      }
+    ) {
+      confetti(
+        Object.assign({}, defaults, opts, {
+          particleCount: Math.floor(count * particleRatio),
+        })
+      );
+    }
+
+    fire(0.25, {
+      spread: 26,
+      startVelocity: 55,
+    });
+    fire(0.2, {
+      spread: 60,
+    });
+    fire(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8,
+    });
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2,
+    });
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 45,
+    });
+    return true;
+  };
+
   render() {
     const { currentWordPosition, uiState, readingAge } = this.state;
     const { classes } = this.props;
@@ -284,6 +335,7 @@ class ReadingCard extends Component<PropType, State> {
           component="div"
         >
           {Array.isArray(readingAge) && "Congratulations"}
+          {uiState === "done" && this.fireConfetti()}
         </Typography>
         {Array.isArray(readingAge) && (
           <Typography
@@ -342,9 +394,6 @@ class ReadingCard extends Component<PropType, State> {
         {uiState !== "done" && (
           <CardActions className={classes.controls}>
             <>
-              {/* <IconButton color="secondary" onClick={() => void 0}>
-              <KeyboardArrowLeftIcon />
-            </IconButton> */}
               <IconButton
                 disabled={uiState !== "reading"}
                 color="inherit"
@@ -360,113 +409,4 @@ class ReadingCard extends Component<PropType, State> {
   }
 }
 
-export default withStyles(styles)(ReactTimeout(ReadingCard));
-/*
-export function ReadinggCard() {
-  const classes = useStyles();
-
-  const { endTest, recordingState, error, next, startTest, word, loading } =
-    useSchonell((score) => void 0);
-
-  const Controls = () => {
-    switch (recordingState) {
-      case "inactive":
-        return (
-          <IconButton
-            size="medium"
-            className={classes.recordButton}
-            color="default"
-            onClick={startTest}
-          >
-            <MicIcon />
-          </IconButton>
-        );
-      case "recording":
-        return (
-          <IconButton
-            size="medium"
-            className={classes.stopButton}
-            color="default"
-            onClick={endTest}
-          >
-            <StopIcon />
-          </IconButton>
-        );
-      case "stopped":
-        return (
-          <IconButton
-            size="medium"
-            className={classes.stopButton}
-            color="default"
-          >
-            <CloudUploadTwoToneIcon />
-          </IconButton>
-        );
-    }
-  };
-  if (error.status) {
-    return (
-      <div style={{ textAlign: "center" }}>
-        <AlertError /> <br />
-        {"Oops! something went wrong please refresh"}
-        <br />
-        {error.message ?? ""}
-      </div>
-    );
-  }
-  //  !loading && setTimeout(next, 15 * 1000);
-  return (
-    <ResponsiveCardContainer>
-      <CardContent>
-        {loading ? (
-          <div style={{ textAlign: "center" }}>
-            <CircularProgress />
-          </div>
-        ) : recordingState === "inactive" ? (
-          <Typography
-            gutterBottom
-            color="textSecondary"
-            style={{ textAlign: "center" }}
-            component="div"
-          >
-            Please start recoding
-          </Typography>
-        ) : (
-          <>
-            <Typography
-              gutterBottom
-              color="textSecondary"
-              variant="h6"
-              component="h2"
-            >
-              Read the text below
-            </Typography>
-            <TextCard text={word} />
-          </>
-        )}
-      </CardContent>
-      <CardActions className={classes.controls}>
-        {!loading && (
-          <>
-            <IconButton
-              disabled={loading || recordingState === "inactive"}
-              color="secondary"
-              onClick={() => void 0}
-            >
-              <KeyboardArrowLeftIcon />
-            </IconButton>
-            {Controls()}
-            <IconButton
-              disabled={loading || recordingState === "inactive"}
-              color="primary"
-              onClick={next}
-            >
-              <KeyboardArrowRightIcon />
-            </IconButton>
-          </>
-        )}
-      </CardActions>
-    </ResponsiveCardContainer>
-  );
-}
-*/
+export default withWidth()(withStyles(styles)(ReactTimeout(ReadingCard)));

@@ -1,11 +1,8 @@
 import React from "react";
-import { makeStyles, Theme, Container } from "@material-ui/core";
-import Image1 from "../../assets/image1.jpg";
-import Image2 from "../../assets/image2.jpg";
-
-
+import { makeStyles, Theme, Container, withStyles } from "@material-ui/core";
+import coverImage from "../../assets/welcome-card-cover.webp";
 import MediaCard from "../../components/MediaCard";
-import { TextField } from "@material-ui/core";
+import { TextField as TextFieldBase } from "@material-ui/core";
 import { useLocation, Route, Switch, useHistory } from "react-router-dom";
 import {
     TransitionGroup,
@@ -13,6 +10,12 @@ import {
 } from "react-transition-group";
 import routes from "../routes.enum";
 
+const TextField = withStyles((theme: Theme) => ({
+    root:{
+        backgroundColor:"#fff",
+        borderRadius:"4px"
+    }
+}))(TextFieldBase)
 import SunPic from "../../components/UI/images/sun.svg";
 import Sun from "../../components/UI/Sun";
 
@@ -66,13 +69,14 @@ export default function Welcome() {
                         {/* <Sun img={images["sun.svg"]} /> */}
                             <WelcomeCards>
                                 <MediaCard
-                                    imgSrc={Image1}
+                                    imgSrc={coverImage}
                                     cardTitle="Welcome to Vani"
                                     cardContext="Hey there, lets find out you reading age. First enter your Biological Age"
                                     buttonText="Next"
                                     formInput={
                                         <TextField
                                             label="Biological Age"
+                                            variant="outlined"
                                             type="text"
                                             value={age ?? ""}
                                             autoFocus
@@ -94,13 +98,14 @@ export default function Welcome() {
                         <Route path={routes.WELCOME + "/2"}>
                             <WelcomeCards>
                                 <MediaCard
-                                    imgSrc={Image2}
+                                    imgSrc={coverImage}
                                     cardTitle="Let us know where you are from"
                                     cardContext="Only if you provide us your region, we can make sure you get the apt sentence to read."
                                     buttonText="Start"
                                     formInput={
                                         <TextField
                                             label="Pincode"
+                                            variant="outlined"
                                             type="text"
                                             autoFocus
                                             inputProps={
