@@ -9,6 +9,8 @@ import {
     CSSTransition
 } from "react-transition-group";
 import routes from "../routes.enum";
+import SunPic from "../../components/UI/images/sun.svg";
+import Sun from "../../components/UI/Sun";
 
 const TextField = withStyles((theme: Theme) => ({
     root:{
@@ -16,8 +18,6 @@ const TextField = withStyles((theme: Theme) => ({
         borderRadius:"4px"
     }
 }))(TextFieldBase)
-import SunPic from "../../components/UI/images/sun.svg";
-import Sun from "../../components/UI/Sun";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -57,6 +57,7 @@ export default function Welcome() {
     return (
         <Container fixed disableGutters className={classes.root}>
             <TransitionGroup>
+            <Sun img={SunPic} />
                 <CSSTransition
                     key={location.key}
                     classNames="fade"
@@ -65,7 +66,7 @@ export default function Welcome() {
 
                     <Switch location={location}>
                         <Route exact path={routes.WELCOME + "/"}>
-                        <Sun img={SunPic} />
+                        
                         {/* <Sun img={images["sun.svg"]} /> */}
                             <WelcomeCards>
                                 <MediaCard
