@@ -16,6 +16,8 @@ const TextField = withStyles((theme: Theme) => ({
         borderRadius:"4px"
     }
 }))(TextFieldBase)
+import SunPic from "../../components/UI/images/sun.svg";
+import Sun from "../../components/UI/Sun";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -60,8 +62,11 @@ export default function Welcome() {
                     classNames="fade"
                     timeout={300}
                 >
+
                     <Switch location={location}>
                         <Route exact path={routes.WELCOME + "/"}>
+                        <Sun img={SunPic} />
+                        {/* <Sun img={images["sun.svg"]} /> */}
                             <WelcomeCards>
                                 <MediaCard
                                     imgSrc={coverImage}
