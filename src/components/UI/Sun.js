@@ -6,7 +6,7 @@ const Sun = styled.div`
 border-radius: 50%;
   position: fixed;
   top: 3%;
-  left: 45%;
+  left: 01%;
   z-index: 1;
   width: 20%;
   max-width: 150px;
