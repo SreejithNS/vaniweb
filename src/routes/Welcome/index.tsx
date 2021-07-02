@@ -1,8 +1,8 @@
 import React from "react";
-import { makeStyles, Theme, Container } from "@material-ui/core";
+import { makeStyles, Theme, Container, withStyles } from "@material-ui/core";
 import coverImage from "../../assets/welcome-card-cover.webp";
 import MediaCard from "../../components/MediaCard";
-import { TextField } from "@material-ui/core";
+import { TextField as TextFieldBase } from "@material-ui/core";
 import { useLocation, Route, Switch, useHistory } from "react-router-dom";
 import {
     TransitionGroup,
@@ -10,6 +10,12 @@ import {
 } from "react-transition-group";
 import routes from "../routes.enum";
 
+const TextField = withStyles((theme: Theme) => ({
+    root:{
+        backgroundColor:"#fff",
+        borderRadius:"4px"
+    }
+}))(TextFieldBase)
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -65,6 +71,7 @@ export default function Welcome() {
                                     formInput={
                                         <TextField
                                             label="Biological Age"
+                                            variant="outlined"
                                             type="text"
                                             value={age ?? ""}
                                             autoFocus
@@ -93,6 +100,7 @@ export default function Welcome() {
                                     formInput={
                                         <TextField
                                             label="Pincode"
+                                            variant="outlined"
                                             type="text"
                                             autoFocus
                                             inputProps={
