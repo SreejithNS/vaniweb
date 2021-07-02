@@ -64,7 +64,7 @@ export default function Welcome() {
                         <Route exact path={routes.WELCOME + "/"}>
                             <WelcomeCards>
                                 <MediaCard
-                                    imgSrc={Image1}
+                                    imgSrc={coverImage}
                                     cardTitle="Welcome to Vani"
                                     cardContext="Hey there, lets find out you reading age. First enter your Biological Age"
                                     buttonText="Next"
@@ -93,7 +93,7 @@ export default function Welcome() {
                         <Route path={routes.WELCOME + "/2"}>
                             <WelcomeCards>
                                 <MediaCard
-                                    imgSrc={Image2}
+                                    imgSrc={coverImage}
                                     cardTitle="Let us know where you are from"
                                     cardContext="Only if you provide us your region, we can make sure you get the apt sentence to read."
                                     buttonText="Start"
