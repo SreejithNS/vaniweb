@@ -9,9 +9,11 @@ import {
     CSSTransition
 } from "react-transition-group";
 import routes from "../routes.enum";
+
 import SunPic from "../../components/UI/images/sun.svg";
 import Sun from "../../components/UI/Sun";
-
+import CloudPic from "../../components/UI/images/clouds.svg";
+import Cloud from "../../components/UI/Cloud";
 const TextField = withStyles((theme: Theme) => ({
     root:{
         backgroundColor:"#fff",
@@ -52,12 +54,17 @@ export default function Welcome() {
     const history = useHistory();
     const [age, setAge] = React.useState<string | undefined>();
     const [pincode, setPincode] = React.useState<string | undefined>();
-
+    
     const dummyFunction = (point: string) => () => history.push(routes.WELCOME + point);
     return (
+        
         <Container fixed disableGutters className={classes.root}>
-            <TransitionGroup>
             <Sun img={SunPic} />
+            <Cloud img={CloudPic} />          
+            <TransitionGroup>
+            
+
+            
                 <CSSTransition
                     key={location.key}
                     classNames="fade"
@@ -72,7 +79,7 @@ export default function Welcome() {
                                 <MediaCard
                                     imgSrc={coverImage}
                                     cardTitle="Welcome to Vani"
-                                    cardContext="Hey there, lets find out you reading age. First enter your Biological Age"
+                                    cardContext="Hey there, lets find out your reading age. First enter your Biological Age"
                                     buttonText="Next"
                                     formInput={
                                         <TextField

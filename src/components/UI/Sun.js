@@ -21,6 +21,7 @@ export default ({img}) => {
   const [resetSun, setResetSun] = useState(false);
 
   const propsSun = useSpring({
+    loop:  true ,
     from: { transform: "rotate(0deg)" },
     to: { transform: "rotate(360deg)" },
     onRest: () => setResetSun(state => !state),
