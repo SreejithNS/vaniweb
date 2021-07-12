@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 
 export default function Routes() {
     return (
-        <Router>
+        <Router> 
             <Switch>
                 <Route path={routes.WELCOME}>
                     <Welcome />

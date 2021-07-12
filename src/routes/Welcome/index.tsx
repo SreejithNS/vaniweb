@@ -10,10 +10,6 @@ import {
 } from "react-transition-group";
 import routes from "../routes.enum";
 
-import SunPic from "../../components/UI/images/sun.svg";
-import Sun from "../../components/UI/Sun";
-import CloudPic from "../../components/UI/images/clouds.svg";
-import Cloud from "../../components/UI/Cloud";
 const TextField = withStyles((theme: Theme) => ({
     root:{
         backgroundColor:"#fff",
@@ -59,8 +55,6 @@ export default function Welcome() {
     return (
         
         <Container fixed disableGutters className={classes.root}>
-            <Sun img={SunPic} />
-            <Cloud img={CloudPic} />          
             <TransitionGroup>
             
 

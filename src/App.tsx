@@ -3,6 +3,11 @@ import "./index.css";
 import { CssBaseline, ThemeProvider, createMuiTheme } from "@material-ui/core";
 import Routes from "./routes";
 
+import SunPic from "./components/UI/images/sun.svg";
+import Sun from "./components/UI/Sun";
+import CloudPic from "./components/UI/images/clouds.svg";
+import Cloud from "./components/UI/Cloud";
+
 const theme = createMuiTheme({
   overrides: {
     MuiTextField:{
@@ -64,6 +69,8 @@ function App() {
   return (
     <>
       <CssBaseline />
+      <Sun img={SunPic} />
+      <Cloud img={CloudPic} />   
       <ThemeProvider theme={theme}>
         <Routes />
       </ThemeProvider>
